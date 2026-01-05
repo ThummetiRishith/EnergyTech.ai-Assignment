@@ -1,32 +1,53 @@
 import express from "express";
 import dotenv from "dotenv";
-dotenv.config();
-
 import cors from "cors";
 import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 
+dotenv.config();
 connectDB();
 
 const app = express();
 
+/* ===============================
+   MIDDLEWARES
+================================ */
 app.use(express.json());
 
-const allowedOrigins = [
-  "http://localhost:5173",
-  "https://energetic-ai-assignment-zfb1.vercel.app",
-];
 app.use(
   cors({
-    origin: allowedOrigins,
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    origin: [
+      "http://localhost:5173",
+      "http://localhost:3000",
+
+      // ✅ ADD ALL YOUR VERCEL FRONTEND DOMAINS
+      "https://energy-tech-ai-assignment.vercel.app",
+      "https://energy-tech-ai-assignment-dmhm7aty0.vercel.app",
+      "https://energy-tech-ai-assignment-68q6k05e.vercel.app",
+    ],
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
+/* ===============================
+   ROUTES
+================================ */
 app.use("/api/auth", authRoutes);
 
-const PORT = process.env.PORT || 5000;
+/* ===============================
+   HEALTH CHECK (OPTIONAL BUT GOOD)
+================================ */
+app.get("/", (req, res) => {
+  res.send("API is running 🚀");
+});
+
+/* ===============================
+   SERVER
+================================ */
+const PORT = process.env.PORT || 3000;
+
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`✅ Server running on port ${PORT}`);
 });
