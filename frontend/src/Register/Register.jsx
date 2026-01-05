@@ -60,7 +60,9 @@ const Register = () => {
 
       navigate("/", { replace: true });
     } catch (error) {
-      setErrors({ email: "User already exists" });
+      setErrors({
+        email: error.response?.data?.message || "Registration failed",
+      });
     } finally {
       setIsLoading(false);
     }
